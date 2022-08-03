@@ -5,6 +5,13 @@
 		{id:3, name:'Action',field:'action'}
 	]
 
+	const joinedColumns = [
+		{id:1, name:'Parent of Parents',field:'id'},
+		{id:2, name:'All childrens data', field:'data_with_childrens'},
+		{id:3, name:'', field:''},
+	]
+
 	export default {
-		columns
+		columns,
+		joinedColumns
 }

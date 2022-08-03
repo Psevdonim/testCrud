@@ -73,19 +73,19 @@ const getters = {
 			return group
 		})
 	},
-  recordsData: state => {
-	const records = state.recordsData.map((record, index)=>{
 
-		record.data_group_name = state.groupsData.find(data=> data.id == record.data_group_id)?.name
-		record.parsed_data = Object.entries(record.data).map((value) => value.join(': ')).join(', ')
-		record.title = Object.values(record.data).map((value) => value).join(', ')
-		record.index = index
-		
-		return record
-	}) 
-	return records
-},
-	
+  recordsData: (state) => {
+		const records = state.recordsData.map((record, index)=>{
+			record.childrens = state.recordsData.filter(el => el.record_group_id == record.id)
+			record.data_group_name = state.groupsData.find(data=> data.id == record.data_group_id)?.name
+			record.parsed_data = Object.entries(record.data).map((value) => value.join(': ')).join(', ')
+			record.title = Object.values(record.data).map((value) => value).join(', ')
+			record.index = index
+			record.action = ''
+			return record
+		}) 
+		return records
+	},
 }
 
 export default {

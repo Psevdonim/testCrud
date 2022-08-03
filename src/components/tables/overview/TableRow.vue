@@ -2,8 +2,7 @@
 	<div class='table__row'>
 		<p v-for='column in columns' :key='column.id'>
 		<slot :name='column.field' :slotProps='rowData'>
-			{{rowData[column.field]}}
-
+			<span v-html='rowData[column.field]'/>
 		</slot>
 		</p>
 	</div>

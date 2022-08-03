@@ -7,6 +7,11 @@
 				Change
 			</span>
 		</template>
+		<template #data_with_childrens='slotProps' >
+			<span v-for='(data,index) of slotProps.slotProps.data_with_childrens' :key='index'>
+				{{data[0]}}: {{data[1]}}  , 
+			</span>
+		</template>
 		</TableRow> 
 		<!--<pre>
 			{{data}}

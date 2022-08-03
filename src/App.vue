@@ -4,16 +4,21 @@
 			<h1>
 				Data groups
 			</h1>
-			<p class='button' @click='changeModal(null)'>
-				Create
-			</p>
+			<div class='page__buttons'>
+				<p class='button button_switch' @click='changeTables'>
+					{{isVisibleParents ? 'Chain' : 'Data'}}
+				</p>
+				<p class='button' @click='changeModal(null)'>
+					Create
+				</p>
+			</div>
 		</div>
-
-		<DataTable :tableData='recordsData' :columns='columns' @changeRecord='changeModal'/>
+		<DataTable :tableData='isVisibleParents ? recordMergedData : recordsData' :columns='isVisibleParents ? joinedColumns : columns' @changeRecord='changeModal'/>
 		
 		<transition name="fade">
 			<ChangeRecordModal :isVisible='isModalVisible' :recordData='recordData'  @closeModal='changeModal'/>
 		</transition>
+		
 	</div>
 </template>
 
@@ -34,20 +39,41 @@ export default {
 		data(){
 			return {
 				columns:helper.columns,
+				joinedColumns:helper.joinedColumns,
 				isModalVisible:false,
-				recordData:null
+				recordData:null,
+				isVisibleParents:false
 			}
 		},
-
-	
 
 	computed:{
 		...mapGetters({
 			groupsData:'groups/groupsData',
 			recordsData:'groups/recordsData'
 		}),
-	},
 
+		recordMergedData(){
+			const getChildrensData = (record) => {
+				let data = [...Object.entries(record.data)] 
+				if(record.childrens.length){
+					record.childrens.forEach(e=> {
+						data = [...data, ...getChildrensData(e)]
+						})
+				}
+					return data
+			}
+
+			let records = this.$store.getters['groups/recordsData'].map(record => {
+				record.data_with_childrens = getChildrensData(record)
+				return record
+				})
+			
+			records = records.filter(e=> e.record_group_id == null)
+			return records
+		
+		}
+
+	},
 
 	methods:{
 		...mapActions({
@@ -61,6 +87,10 @@ export default {
 
 		getRecords(){
 		this.getAllRecords()
+		},
+
+		changeTables(){
+			this.isVisibleParents = !this.isVisibleParents
 		},
 
 		changeModal(data){

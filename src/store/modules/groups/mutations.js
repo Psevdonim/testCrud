@@ -13,7 +13,6 @@ export default {
   },
 
 	allRecordsReadSuccess(state, data){
-		
     state.recordsData = data.data.map( e => {
 			e.data = JSON.parse(e.data)
 			return e
